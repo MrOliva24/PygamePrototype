@@ -1,0 +1,83 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Game{
+-clock : Clock
+-screen : Surface
+-factory_flying_event_types : int
+-factory_landscape_event_types : int
+-user_quits : boolean
++play()
+}
+class FactorySprites{
+-prototypes : []
+-periods : []
+-event_types : []
++make() : GameSprite
+}
+
+interface GameSprite{
+{abstract} #clone() : GameSprite
+{abstract} #update()
+}
+
+class Bird{
++Min_Speed : int
++Max_Speed : int
+-time : int
+-speed : int
++update()
++clone() : Bird
+}
+
+class Umbrella{
++Min_Speed_y : int
++Max_Speed_y : int
+-speed_y : int
++update()
++clone() : Umbrella
+}
+
+class Cloud{
++update()
++clone() : Cloud
+}
+
+class Mountain{
++update()
++clone() : Mountain
+}
+
+class Player{
+-move_up_sound : Sound
+-move_down_sound : Sound
++update(pressed_keys : boolean[])
++stop_move_sounds()
+}
+package pygame{
+class Sprite{
++update()
+}
+class Sound
+class Clock
+}
+Game -down->"1" FactorySprites : factory_flying
+Game -down->"1" FactorySprites : factory_landscape
+
+Game ->"*" GameSprite : flying_sprites
+Game ->"*" GameSprite : landscape_sprites
+
+FactorySprites o-down->"1..*" GameSprite : prototypes
+
+GameSprite <|.down. Bird
+GameSprite <|.down. Umbrella
+GameSprite <|.down. Cloud
+GameSprite <|.down. Mountain
+
+
+GameSprite -left|> Sprite
+
+Sprite "1..*"<-left-Game : all_sprites
+Game -right->"1" Player : player
+Player -up-|> Sprite
+@enduml
